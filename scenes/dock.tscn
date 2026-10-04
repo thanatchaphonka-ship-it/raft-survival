@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://21fj0nvgigvt"]
+
+[ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="1_pi7v4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
+size = Vector3(1.9372559, 1, 2.0479126)
+
+[node name="Dock" type="StaticBody3D" unique_id=1177553611]
+
+[node name="Dock" parent="." unique_id=519494930 instance=ExtResource("1_pi7v4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=389772611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0008544922, 0, 0.20761108)
+shape = SubResource("BoxShape3D_1vivr")

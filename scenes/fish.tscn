@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://buyskv2suesem"]
+
+[ext_resource type="PackedScene" uid="uid://bi6mkjomv3bd6" path="res://assets/models/fish.glb" id="1_n6yr6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8vrlf"]
+size = Vector3(14.543884, 32.05039, 85)
+
+[node name="Area3D" type="Area3D" unique_id=443381848]
+
+[node name="fish" parent="." unique_id=649110820 instance=ExtResource("1_n6yr6")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1678208747]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33706665, -0.50192785, 7.185211)
+shape = SubResource("BoxShape3D_8vrlf")

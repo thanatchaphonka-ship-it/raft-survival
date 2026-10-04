@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://db8340r4dbypa"]
+
+[ext_resource type="PackedScene" uid="uid://c44fv7wh4tbyx" path="res://assets/models/Shark.glb" id="1_8l5qy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
+size = Vector3(2.0742188, 1.4169922, 6.2390137)
+
+[node name="Area3D" type="Area3D" unique_id=214004752]
+
+[node name="Root Scene" parent="." unique_id=624413524 instance=ExtResource("1_8l5qy")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=438699859]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14160156, -0.063964844, -0.37438965)
+shape = SubResource("BoxShape3D_1vivr")

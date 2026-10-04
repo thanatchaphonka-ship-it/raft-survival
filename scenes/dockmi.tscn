@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://blnbu8jhy02q4"]
+
+[ext_resource type="PackedScene" uid="uid://dydr3l8w83kc0" path="res://assets/models/Dockmi.glb" id="1_4ui3t"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
+size = Vector3(0.23046875, 0.1015625, 0.8833618)
+
+[node name="Area3D" type="Area3D" unique_id=1031688438]
+
+[node name="Dockmi" parent="." unique_id=1888311502 instance=ExtResource("1_4ui3t")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=177425417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33789063, 0.26953125, 0.20394897)
+shape = SubResource("BoxShape3D_1vivr")
