@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://c27iyfn1mwe37"]
+
+[ext_resource type="Script" uid="uid://dy44fqn5h3243" path="res://scenes/main_menu.gd" id="1_bqqt6"]
+[ext_resource type="Texture2D" uid="uid://bye8lf8voj7p3" path="res://assets/models/Manmenu.png" id="1_l6cm7"]
+[ext_resource type="Texture2D" uid="uid://bt5orbjxxtbxi" path="res://assets/models/Play.png" id="3_wu84c"]
+[ext_resource type="AudioStream" uid="uid://d3s2h3yd420lb" path="res://assets/sounds/switch_004.ogg" id="4_wu84c"]
+[ext_resource type="AudioStream" uid="uid://dokcebox86p8y" path="res://assets/sounds/At The Shore.mp3" id="5_8ln24"]
+
+[node name="MainMenu" type="Control" unique_id=1230989307]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bqqt6")
+
+[node name="Blackground" type="TextureRect" parent="." unique_id=605980862]
+layout_mode = 0
+offset_left = 2.9999847
+offset_right = 1622.0
+offset_bottom = 971.0
+scale = Vector2(0.7086241, 0.6974308)
+texture = ExtResource("1_l6cm7")
+
+[node name="PlayButton" type="TextureButton" parent="." unique_id=31094356]
+layout_mode = 0
+offset_left = -54.0
+offset_top = 147.0
+offset_right = 653.0
+offset_bottom = 500.0
+scale = Vector2(0.857077, 0.857077)
+pivot_offset = Vector2(350, 150)
+texture_normal = ExtResource("3_wu84c")
+
+[node name="ClickSound" type="AudioStreamPlayer" parent="." unique_id=1995367029]
+stream = ExtResource("4_wu84c")
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=315704239]
+stream = ExtResource("5_8ln24")
+volume_db = -10.105
+autoplay = true
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]

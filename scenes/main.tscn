@@ -2,15 +2,25 @@
 
 [ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://7jgpslfsgiv8" path="res://assets/models/player.glb" id="2_sugp2"]
+[ext_resource type="AudioStream" uid="uid://ccs8uj6m7spm0" path="res://assets/sounds/u_0lndlt5pdf-ocean-waves-562776.mp3" id="3_sugp2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o6xl0"]
 transparency = 4
-albedo_color = Color(0, 0.35686275, 0.8, 0.53333336)
+albedo_color = Color(0.42745098, 0.7647059, 1, 0.53333336)
 metallic = 0.2
 roughness = 0.05
 normal_enabled = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_8vrlf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tbgi4"]
+
+[sub_resource type="Sky" id="Sky_tefeu"]
+sky_material = SubResource("ProceduralSkyMaterial_tbgi4")
+
+[sub_resource type="Environment" id="Environment_tefeu"]
+background_mode = 2
+sky = SubResource("Sky_tefeu")
 
 [node name="Main" type="Node3D" unique_id=1435458834]
 
@@ -18,15 +28,101 @@ normal_enabled = true
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -0.48888445, 0)
 
 [node name="player" parent="." unique_id=1049398162 instance=ExtResource("2_sugp2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86848307, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2151389, 0)
 
-[node name="Camera3D" type="Camera3D" parent="player" unique_id=482653651]
-transform = Transform3D(1, 0, 0, 0, 0.96271354, 0.27052307, 0, -0.27052307, 0.96271354, 0, 3.4684534, 7.076728)
+[node name="Skeleton3D" parent="player/RootNode/CharacterArmature" parent_id_path=PackedInt32Array(1049398162, 823849921) index="0" unique_id=1296680058]
+bones/1/position = Vector3(0.00024707476, 0.00024663162, -0.003462344)
+bones/1/rotation = Quaternion(0.46121317, 0.53512543, 0.54142547, -0.45583078)
+bones/2/position = Vector3(2.152972e-05, 0.010306466, 0.00183072)
+bones/2/rotation = Quaternion(-3.8842853e-09, 0.38076186, 2.2728212e-08, 0.92467326)
+bones/4/rotation = Quaternion(0.22969256, -0.11355864, 0.00045984425, 0.96661556)
+bones/5/rotation = Quaternion(-0.0661104, -0.022601575, 0.011357633, 0.9974917)
+bones/6/rotation = Quaternion(-0.0060886242, 0.00071686244, 0.018280862, 0.9998141)
+bones/7/rotation = Quaternion(0.028900076, -0.24447861, 0.037021525, 0.96851665)
+bones/9/rotation = Quaternion(0.73476005, 0.3493584, 0.42317063, -0.3987518)
+bones/10/rotation = Quaternion(-0.20374002, 0.10233813, -0.21170212, 0.950368)
+bones/17/rotation = Quaternion(0.36714727, -0.60516363, -0.6091614, -0.35763428)
+bones/18/rotation = Quaternion(-0.06514961, -0.022758666, 0.51776385, 0.85273576)
+bones/21/rotation = Quaternion(-0.62014806, -0.08527078, -0.032721363, 0.7791499)
+bones/24/rotation = Quaternion(0.9705235, 0.16300766, -0.16544606, 0.064346336)
+bones/25/rotation = Quaternion(0.3240833, 0.0030656522, 0.0074870875, 0.945994)
+bones/26/rotation = Quaternion(0.9678233, -0.056209076, -0.0012900113, 0.2452693)
+bones/27/rotation = Quaternion(0.4354241, -0.003943203, -0.007064427, 0.90018916)
+bones/28/position = Vector3(0.005242208, 0.0030132178, -0.00030022115)
+bones/29/position = Vector3(-0.002383714, 0.0002466272, 0.0032672228)
+bones/29/rotation = Quaternion(0.26499137, 0.6523357, 0.66002834, -0.26191664)
+bones/30/position = Vector3(0.0006481516, 0.0034280224, 0.005996506)
+
+[node name="Foot_L" parent="player/RootNode/CharacterArmature/Skeleton3D" index="0" unique_id=1351656402]
+transform = Transform3D(-0.15900111, 0.9872107, 0.0115718255, -0.98727834, -0.1589903, -0.0018460097, 1.7370203e-05, -0.011718215, 0.99993134, 0.0002339584, 0.0034634906, 0.00022247665)
+
+[node name="Head" parent="player/RootNode/CharacterArmature/Skeleton3D" index="1" unique_id=2034554077]
+transform = Transform3D(0.9983163, -0.05654175, 0.012957364, 0.0025752187, -0.1799497, -0.9836725, 0.05795025, 0.9820494, -0.17950106, -0.0006143264, -0.0018189282, 0.019498825)
+
+[node name="Fist2_L" parent="player/RootNode/CharacterArmature/Skeleton3D" index="2" unique_id=1769189285]
+transform = Transform3D(0.55019987, -0.038023278, 0.83416724, -0.8008449, -0.3069439, 0.5142301, 0.23648967, -0.9509676, -0.1993314, 0.0041941577, 0.00088170666, 0.0076579554)
+
+[node name="Thumb2_L" parent="player/RootNode/CharacterArmature/Skeleton3D" index="3" unique_id=1071752812]
+transform = Transform3D(0.6980697, -0.0054118186, 0.71601, -0.44627833, -0.78527474, 0.429161, 0.55994165, -0.61912364, -0.5505917, 0.003860679, 0.00023226207, 0.009439559)
+
+[node name="Fist2_R" parent="player/RootNode/CharacterArmature/Skeleton3D" index="4" unique_id=353914178]
+transform = Transform3D(-0.7007728, 0.43505538, 0.5653714, -0.51131195, 0.24634576, -0.82333094, -0.4974713, -0.86604875, 0.04981672, -0.00040518865, -0.011247304, 0.014468346)
+
+[node name="Thumb2_R" parent="player/RootNode/CharacterArmature/Skeleton3D" index="5" unique_id=2103740574]
+transform = Transform3D(-0.23674828, 0.97156304, -0.0039819255, -0.41989467, -0.10601322, -0.90135986, -0.87615, -0.21172294, 0.43305254, -0.0007239621, -0.009391166, 0.014868647)
+
+[node name="LowerLeg_L" parent="player/RootNode/CharacterArmature/Skeleton3D" index="6" unique_id=713140702]
+transform = Transform3D(0.39798644, -0.31120056, -0.86299163, 0.87358993, 0.41576195, 0.25294352, 0.28008378, -0.8545721, 0.4373335, 0.0021212983, 0.0010016873, 0.0052889152)
+
+[node name="LowerLeg_R" parent="player/RootNode/CharacterArmature/Skeleton3D" index="7" unique_id=2013134461]
+transform = Transform3D(0.71834594, -0.3357545, -0.6092987, 0.6890631, 0.22283226, 0.6895906, -0.09576197, -0.91521066, 0.3914313, -0.0003823404, -0.004621778, 0.005648901)
+
+[node name="PoleTarget_L" parent="player/RootNode/CharacterArmature/Skeleton3D" index="8" unique_id=90525985]
+transform = Transform3D(1, -7.1054274e-14, 7.152558e-07, 7.1525574e-07, 3.5762787e-07, -1, -1.8474117e-13, 1, 3.5762787e-07, 0.005229093, 0.00030137153, 0.0029890637)
+
+[node name="Foot_R" parent="player/RootNode/CharacterArmature/Skeleton3D" index="9" unique_id=1636602692]
+transform = Transform3D(-0.7223582, 0.6914718, 0.008088473, -0.6915191, -0.72230846, -0.008475061, -1.7902306e-05, -0.011715392, 0.9999313, -0.002396827, -0.0032660766, 0.00022247464)
+
+[node name="PoleTarget_R" parent="player/RootNode/CharacterArmature/Skeleton3D" index="10" unique_id=1233915366]
+transform = Transform3D(1, -7.105428e-14, -7.1525596e-07, -7.152558e-07, 3.5762787e-07, -1, 3.2684963e-13, 1, 3.5762787e-07, 0.00063503976, -0.005995357, 0.0034038704)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=482653651]
+transform = Transform3D(1, 0, 0, 0, 0.9558624, 0.29381472, 0, -0.29381472, 0.9558624, 0, 5.027211, 11.475255)
+current = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=533159529]
-transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0.05671692, 0.2542833, -0.002872467)
+transform = Transform3D(299.99997, -0.0083208885, 0.001467377, 0.0083208885, 299.99997, 0.00081618637, -0.001467377, -0.00081618637, 299.99997, 0.05671692, 0.2542833, -0.002872467)
 material_override = SubResource("StandardMaterial3D_o6xl0")
 mesh = SubResource("PlaneMesh_8vrlf")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=626266612]
-transform = Transform3D(1, 0, 0, 0, 0.90902907, 0.41673267, 0, -0.41673267, 0.90902907, 0.6086266, 8.792817, 13.775959)
+transform = Transform3D(1, 0, 0, 0, 0.9090291, 0.4167327, 0, -0.4167327, 0.9090291, 0.6086266, 1.8894873, 13.775959)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=47690613]
+environment = SubResource("Environment_tefeu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=772281927]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=1068565070]
+offset_left = 77.0
+offset_top = 17.0
+offset_right = 340.0
+offset_bottom = 131.0
+theme_override_constants/separation = 15
+
+[node name="HP" type="ProgressBar" parent="CanvasLayer/VBoxContainer" unique_id=671940422]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+value = 100.0
+
+[node name="Hunger" type="ProgressBar" parent="CanvasLayer/VBoxContainer" unique_id=105764204]
+custom_minimum_size = Vector2(20, 40)
+layout_mode = 2
+value = 100.0
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="." unique_id=802869543]
+stream = ExtResource("3_sugp2")
+volume_db = 7.0
+autoplay = true
+
+[editable path="player"]

@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://by4l7h8vovrex"]
 
 [ext_resource type="PackedScene" uid="uid://7jgpslfsgiv8" path="res://assets/models/player.glb" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b8a4a4ytd1r13" path="res://scenes/player.gd" id="1_g2els"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8vrlf"]
 radius = 0.58984375
-height = 3.1501465
+height = 2.948391
 
 [node name="CharacterBody3D" type="CharacterBody3D" unique_id=444575965]
+script = ExtResource("1_g2els")
 
 [node name="Root Scene" parent="." unique_id=1049398162 instance=ExtResource("1_3vyb7")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1781808486]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3433838, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4442616, 0)
 shape = SubResource("CapsuleShape3D_8vrlf")
