@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dvfsg7fjudo1h"]
+
+[ext_resource type="Script" uid="uid://cutcubbd4ej06" path="res://scenes/wood.gd" id="1_0m61w"]
+[ext_resource type="PackedScene" uid="uid://dydr3l8w83kc0" path="res://assets/models/Dockmi.glb" id="2_8qflt"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jyhfs"]
+radius = 1.0
+
+[node name="Wood" type="Area3D" unique_id=797976488]
+script = ExtResource("1_0m61w")
+
+[node name="Dockmi" parent="." unique_id=2094017730 instance=ExtResource("2_8qflt")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1895229690]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, 0)
+shape = SubResource("SphereShape3D_jyhfs")

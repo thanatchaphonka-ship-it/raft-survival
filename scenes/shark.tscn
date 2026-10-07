@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://db8340r4dbypa"]
 
 [ext_resource type="PackedScene" uid="uid://c44fv7wh4tbyx" path="res://assets/models/Shark.glb" id="1_8l5qy"]
+[ext_resource type="Script" uid="uid://ley2jo8t32v3" path="res://scenes/shark.gd" id="1_v5iaq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
 size = Vector3(2.0742188, 1.4169922, 6.2390137)
 
 [node name="Area3D" type="Area3D" unique_id=214004752]
+script = ExtResource("1_v5iaq")
 
 [node name="Root Scene" parent="." unique_id=624413524 instance=ExtResource("1_8l5qy")]
 

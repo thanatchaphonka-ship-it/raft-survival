@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://t8p6sv53htyd"]
 
+[ext_resource type="Script" uid="uid://vyn6f7x061qp" path="res://scenes/barrel.gd" id="1_ptqd7"]
 [ext_resource type="PackedScene" uid="uid://cqp5coosxxoqm" path="res://assets/models/Barrel.glb" id="1_q36op"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_1vivr"]
@@ -7,6 +8,8 @@ height = 0.70266724
 radius = 0.35839844
 
 [node name="Area3D" type="Area3D" unique_id=1071244496]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+script = ExtResource("1_ptqd7")
 
 [node name="Root Scene" parent="." unique_id=1678904076 instance=ExtResource("1_q36op")]
 
