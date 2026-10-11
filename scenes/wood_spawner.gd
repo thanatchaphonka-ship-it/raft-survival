@@ -3,11 +3,8 @@ extends Node3D
 @export var wood_scene: PackedScene
 @export var spawn_interval := 3.0
 
-# ระยะที่ไม้เริ่มเกิด
-@export var spawn_distance := 15.0
-
-# ความกว้างในการสุ่ม
-@export var spawn_width := 10.0
+# 👈 ปรับระยะเกิดให้ใกล้เข้ามาเห็นชัดๆ (ประมาณ 8.0 - 10.0)
+@export var spawn_distance := 9.0
 
 
 func _ready():
@@ -15,19 +12,26 @@ func _ready():
 
 
 func spawn_wood():
+	if wood_scene == null:
+		return
+
+	# หาตำแหน่งแพ
+	var dock = get_tree().current_scene.find_child("Dock", true, false)
+	var center_pos = Vector3.ZERO
+	if dock != null:
+		center_pos = dock.global_position
+
 	var wood = wood_scene.instantiate()
-	add_child(wood)
+	get_tree().current_scene.add_child(wood)
 
-	# สุ่มตำแหน่งซ้าย-ขวา
-	var spawn_x = randf_range(-spawn_width, spawn_width)
+	# สุ่มมุมรอบแพ
+	var random_angle = randf_range(0, TAU)
 
-	# ให้ไม้เกิดด้านหน้า แล้วค่อยลอยเข้ามา
-	wood.global_position = Vector3(
-		spawn_x,
-		0.0,
-		-spawn_distance
-	)
+	# คำนวณพิกัด X, Z วงกลมรอบแพโดยอ้างอิงจากตำแหน่งแพจริง
+	var spawn_x = center_pos.x + (cos(random_angle) * spawn_distance)
+	var spawn_z = center_pos.z + (sin(random_angle) * spawn_distance)
 
-	# รอแล้วสร้างไม้ชิ้นต่อไป
+	wood.global_position = Vector3(spawn_x, 0.0, spawn_z)
+
 	await get_tree().create_timer(spawn_interval).timeout
 	spawn_wood()

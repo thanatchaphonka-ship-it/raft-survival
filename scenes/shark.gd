@@ -99,89 +99,64 @@ func _ready():
 
 func _process(delta):
 
-	# หา Player ใหม่ถ้าหาย
-	if player == null:
-
-		player = get_tree().current_scene.get_node_or_null(
-			"PlayerController"
-		)
-
+	# ----------------------------------------------------
+	# ค้นหา Player และ Dock ใหม่เสมอ (กรณีอัปเกรดแพ)
+	# ----------------------------------------------------
+	if player == null or not is_instance_valid(player):
+		player = get_tree().current_scene.find_child("PlayerController", true, false)
 		if player == null:
 			return
 
+	if dock == null or not is_instance_valid(dock):
+		dock = get_tree().current_scene.find_child("Dock", true, false)
+		dock_collision = null
 
-	# หา Dock ใหม่ถ้าหาย
-	if dock == null:
-
-		dock = get_tree().current_scene.get_node_or_null(
-			"Dock"
-		)
-
-
-	# หา Collision ใหม่
-	if dock_collision == null:
-
+	if dock_collision == null or not is_instance_valid(dock_collision):
 		find_dock_collision()
 
 
-	# =====================================================
-	# ถ้าไม่ได้กำลังโจมตี/ถอย
-	# ตรวจว่าฉลามโดนแพทับหรือไม่
-	# =====================================================
-
+	# ----------------------------------------------------
+	# ดันฉลามออกจากแพถ้าระหว่างว่ายดันไปโดนแพทับ
+	# ----------------------------------------------------
 	if not is_attacking and not is_retreating:
-
 		push_shark_outside_raft()
 
 
-	# =====================================================
+	# ----------------------------------------------------
 	# กำลังโจมตี
-	# =====================================================
-
+	# ----------------------------------------------------
 	if is_attacking:
-
 		attack_player(delta)
-
 		return
 
 
-	# =====================================================
+	# ----------------------------------------------------
 	# กำลังถอย
-	# =====================================================
-
+	# ----------------------------------------------------
 	if is_retreating:
-
 		retreat_from_raft(delta)
-
 		return
 
 
-	# =====================================================
+	# ----------------------------------------------------
 	# ลดเวลาโจมตี
-	# =====================================================
-
+	# ----------------------------------------------------
 	attack_timer -= delta
 
 
-	# =====================================================
+	# ----------------------------------------------------
 	# ถึงเวลาโจมตี
-	# =====================================================
-
+	# ----------------------------------------------------
 	if attack_timer <= 0.0:
-
 		start_attack()
-
 		if is_attacking:
-
 			return
 
 
-	# =====================================================
+	# ----------------------------------------------------
 	# ว่ายรอบแพ
-	# =====================================================
-
+	# ----------------------------------------------------
 	swim_around_raft(delta)
-
 
 # =========================================================
 # FIND DOCK COLLISION
@@ -204,40 +179,18 @@ func find_dock_collision():
 # =========================================================
 
 func get_raft_half_size() -> Vector2:
-
-	if dock_collision == null:
-
-		return Vector2(
-			6.0,
-			6.0
-		)
+	if dock_collision == null or not is_instance_valid(dock_collision):
+		return Vector2(4.0, 4.0)
 
 	var shape = dock_collision.shape
 
-	if not shape is BoxShape3D:
+	if shape is BoxShape3D:
+		var global_scale = dock_collision.global_transform.basis.get_scale()
+		var half_x = (shape.size.x * global_scale.x) / 2.0
+		var half_z = (shape.size.z * global_scale.z) / 2.0
+		return Vector2(half_x, half_z)
 
-		return Vector2(
-			6.0,
-			6.0
-		)
-
-	var half_x = (
-		shape.size.x
-		* dock_collision.global_transform.basis.x.length()
-		/ 2.0
-	)
-
-	var half_z = (
-		shape.size.z
-		* dock_collision.global_transform.basis.z.length()
-		/ 2.0
-	)
-
-	return Vector2(
-		half_x,
-		half_z
-	)
-
+	return Vector2(4.0, 4.0)
 
 # =========================================================
 # 🦈 SWIM AROUND RAFT
@@ -640,53 +593,37 @@ func finish_attack():
 
 
 # =========================================================
-# 🏃 START RETREAT
+# 🏃 START RETREAT (ฉลามชนแพแล้วหันหน้าสะบัดตัวว่ายออกไป)
 # =========================================================
 
 func start_retreat():
-
 	if dock == null:
 		return
 
+	var raft_center = dock.global_position
 
-	var raft_center = (
-		dock.global_position
-	)
+	# 1. คำนวณทิศทางพุ่งออกจากศูนย์กลางแพ (ฉลามจะหันหน้าถอยออกไปทิศตรงข้าม)
+	var retreat_dir = (global_position - raft_center)
+	retreat_dir.y = 0
 
-	var direction = (
-		global_position
-		- raft_center
-	)
+	# ป้องกันกรณีเวกเตอร์ใกล้ 0 มากเกินไป
+	if retreat_dir.length() < 0.1:
+		retreat_dir = Vector3(1, 0, 0)
 
-	direction.y = 0
+	retreat_dir = retreat_dir.normalized()
 
+	# 2. ตั้งเป้าหมายตำแหน่งถอยออกไปไกลตามระยะ retreat_distance
+	retreat_target = global_position + (retreat_dir * retreat_distance)
 
-	if direction.length() < 0.1:
+	# 3. ตรวจสอบให้แน่ใจว่าจุดถอยอยู่นอกเขตแพแน่นอน
+	retreat_target = keep_outside_raft(retreat_target)
 
-		direction = Vector3(
-			1,
-			0,
-			0
-		)
-
-
-	direction = direction.normalized()
-
-
-	retreat_target = (
-		global_position
-		+ direction
-		* retreat_distance
-	)
-
-
-	retreat_target = keep_outside_raft(
-		retreat_target
-	)
-
-
+	# 4. เปลี่ยนสถานะเป็นกำลังถอย
+	is_attacking = false
 	is_retreating = true
+	has_damaged = false
 
+	print("🦈 ฉลามชนขอบแพแล้ว สะบัดตัวว่ายถอยออกไป!")
 
 # =========================================================
 # 🏃 RETREAT

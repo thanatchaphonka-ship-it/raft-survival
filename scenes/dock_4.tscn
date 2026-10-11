@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://b0vehhyvixv4i"]
+
+[ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="1_01ivq"]
+[ext_resource type="PackedScene" uid="uid://cqp5coosxxoqm" path="res://assets/models/Barrel.glb" id="2_c7cnt"]
+[ext_resource type="PackedScene" uid="uid://bvypyt6edpbax" path="res://assets/models/Bucket of Fish.glb" id="3_54exf"]
+[ext_resource type="PackedScene" uid="uid://chv3ysj1id4v7" path="res://assets/models/Campfire by jeremy - dxxHpVXHLZg.glb" id="4_54exf"]
+[ext_resource type="PackedScene" uid="uid://1fimgkcraoaw" path="res://assets/models/Tent by J-Toastie - 0LnXUwcQzk.glb" id="5_u2g7f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u2g7f"]
+size = Vector3(5.966591, 1, 4.203766)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dhuwy"]
+size = Vector3(1.317627, 0.6085205, 1.2686768)
+
+[node name="Dock" type="StaticBody3D" unique_id=1177553611]
+
+[node name="Dock" parent="." unique_id=519494930 instance=ExtResource("1_01ivq")]
+
+[node name="Dock3" parent="." unique_id=652871962 instance=ExtResource("1_01ivq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.90527, 0, 0)
+
+[node name="Dock2" parent="." unique_id=1185622798 instance=ExtResource("1_01ivq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0481675, 0, 0)
+
+[node name="Dock4" parent="." unique_id=60589594 instance=ExtResource("1_01ivq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.0881143)
+
+[node name="Dock5" parent="." unique_id=795434912 instance=ExtResource("1_01ivq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.90527, 0, 2.0881143)
+
+[node name="Dock6" parent="." unique_id=1522296159 instance=ExtResource("1_01ivq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0481675, 0, 2.0881143)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=389772611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.057552338, 1.1920929e-07, 1.2855377)
+shape = SubResource("BoxShape3D_u2g7f")
+
+[node name="Root Scene" parent="." unique_id=1678904076 instance=ExtResource("2_c7cnt")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.6397722, 0.5, -0.37744966)
+
+[node name="Root Scene2" parent="." unique_id=1315258687 instance=ExtResource("2_c7cnt")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.0481462, 0.5, -0.38504925)
+
+[node name="Root Scene3" parent="." unique_id=1509601982 instance=ExtResource("2_c7cnt")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.3687534, 0.5, -0.040765315)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1549623632]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=287173894]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.3146763, 0.80082, -0.24984749)
+shape = SubResource("BoxShape3D_dhuwy")
+
+[node name="Root Scene4" parent="." unique_id=37002696 instance=ExtResource("3_54exf")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 2, 0.62731576, 0.20883632)
+
+[node name="Root Scene5" parent="." unique_id=2087351867 instance=ExtResource("3_54exf")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 2.4006443, 0.62731576, 0.5307481)
+
+[node name="Campfire by jeremy - dxxHpVXHLZg" parent="." unique_id=1082238046 instance=ExtResource("4_54exf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 1.9935622, 0.54288423, 0.955858)
+
+[node name="Tent by J-Toastie - 0LnXUwcQzk" parent="." unique_id=144468601 instance=ExtResource("5_u2g7f")]
+transform = Transform3D(-1.3, 0, 1.9629454e-07, 0, 1.3, 0, -1.9629454e-07, 0, -1.3, -1.3693018, 1.3489895, 2.1860201)

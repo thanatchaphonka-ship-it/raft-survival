@@ -9,7 +9,7 @@ var dock: Node3D = null
 
 var collecting := false
 var collected := false
-
+var move_direction := Vector3.ZERO # 👈 ทิศทางการลอย
 
 func _ready():
 

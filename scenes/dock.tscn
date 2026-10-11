@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="1_pi7v4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
-size = Vector3(1.9372559, 1, 2.0479126)
+size = Vector3(2.0108948, 1, 2.0479126)
 
 [node name="Dock" type="StaticBody3D" unique_id=1177553611]
 

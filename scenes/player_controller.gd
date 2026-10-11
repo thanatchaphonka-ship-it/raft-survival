@@ -1,8 +1,12 @@
 extends CharacterBody3D
 
+@export var raft_lv2_scene: PackedScene
+@export var raft_lv3_scene: PackedScene
+@export var raft_lv4_scene: PackedScene
 @export var speed := 5.0
 @export var gravity := 9.8
 @export var fall_death_height := -10.0
+@export var jump_velocity := 8.0 # 👈 เพิ่มตัวแปรแรงกระโดดตรงนี้
 
 # ==================================================
 # RAFT
@@ -127,14 +131,14 @@ func _ready():
 	# =========================
 
 	if wood_count_label != null:
-		wood_count_label.text = "Wood : " + str(wood_count)
+		wood_count_label.text = " 🪵 x  " + str(wood_count)
 
 	# =========================
 	# Food UI
 	# =========================
 
 	if food_count_label != null:
-		food_count_label.text = "Food : " + str(food_count)
+		food_count_label.text = " 🍖 x   " + str(food_count)
 
 	# =========================
 	# Game Timer
@@ -273,50 +277,43 @@ func time_up():
 # เปลี่ยนขนาดแพตาม Level
 # ==================================================
 
+# ==================================================
+# เปลี่ยนโมเดลแพตาม Level
+# ==================================================
+
 func update_raft_size():
 
-	if dock == null:
+	# ค้นหาแพตัวเดิมในฉาก
+	var current_dock = get_tree().current_scene.find_child("Dock", true, false)
+	
+	if current_dock == null:
 		print("⚠️ หา Dock ไม่เจอ")
 		return
 
-	if raft_level == 1:
+	var next_scene: PackedScene = null
 
-		dock.scale = Vector3(
-			3.0,
-			3.0,
-			3.0
-		)
-
-	elif raft_level == 2:
-
-		dock.scale = Vector3(
-			4.5,
-			3.0,
-			4.5
-		)
-
+	# เลือก Scene ตามเลเวล
+	if raft_level == 2:
+		next_scene = raft_lv2_scene
 	elif raft_level == 3:
-
-		dock.scale = Vector3(
-			6.0,
-			3.0,
-			6.0
-		)
-
+		next_scene = raft_lv3_scene
 	elif raft_level == 4:
+		next_scene = raft_lv4_scene
 
-		dock.scale = Vector3(
-			7.5,
-			3.0,
-			7.5
-		)
+	# ถ้าเลเวล 1 หรือยังไม่ได้ตั้งค่า Scene ให้ผ่านไป
+	if next_scene == null:
+		return
 
-	print(
-		"🛶 Raft Level:",
-		raft_level,
-		" | Scale:",
-		dock.scale
-	)
+	# สร้างแพอันใหม่ขึ้นมา
+	var new_dock = next_scene.instantiate()
+	new_dock.name = "Dock" # ตั้งชื่อว่า Dock เพื่อใช้อ้างอิงต่อได้
+	new_dock.global_transform = current_dock.global_transform
+
+	# เพิ่มแพใหม่เข้าฉาก แล้วลบแพเดิมออก
+	get_tree().current_scene.add_child(new_dock)
+	current_dock.queue_free()
+
+	print("🛶 เปลี่ยนแพเป็น Lv.", raft_level, " สำเร็จ!")
 
 
 # ==================================================
@@ -336,7 +333,7 @@ func add_wood():
 	)
 
 	if wood_count_label != null:
-		wood_count_label.text = "Wood : " + str(wood_count)
+		wood_count_label.text = " 🪵 x  " + str(wood_count)
 
 	update_upgrade_buttons()
 
@@ -372,6 +369,9 @@ func close_upgrade_panel():
 # ==================================================
 # อัปเกรดแพ
 # ==================================================
+# ==================================================
+# อัปเกรดแพ
+# ==================================================
 
 func upgrade_raft():
 
@@ -404,7 +404,7 @@ func upgrade_raft():
 	# เพิ่ม Level
 	raft_level = next_level
 
-	# เปลี่ยนขนาดแพ
+	# สลับเปลี่ยนโมเดลแพตัวใหม่
 	update_raft_size()
 
 	print(
@@ -424,7 +424,7 @@ func upgrade_raft():
 
 	# อัปเดต Wood UI
 	if wood_count_label != null:
-		wood_count_label.text = "Wood : " + str(wood_count)
+		wood_count_label.text = " 🪵 x  " + str(wood_count)
 
 	# อัปเดตปุ่ม
 	update_upgrade_buttons()
@@ -510,8 +510,7 @@ func update_upgrade_buttons():
 
 			level4_button.disabled = false
 			level4_button.text = "Lv.4  -  10 Wood"
-
-
+	
 # ==================================================
 # เก็บ Food
 # ==================================================
@@ -534,7 +533,7 @@ func add_food():
 	)
 
 	if food_count_label != null:
-		food_count_label.text = "Food : " + str(food_count)
+		food_count_label.text = " 🍖 x  " + str(food_count)
 
 
 # ==================================================
@@ -564,7 +563,7 @@ func eat_food():
 	)
 
 	if food_count_label != null:
-		food_count_label.text = "Food : " + str(food_count)
+		food_count_label.text = " 🍖 x  " + str(food_count)
 
 	if hunger_bar != null:
 		hunger_bar.value = hunger
@@ -575,7 +574,16 @@ func eat_food():
 # ==================================================
 
 func _physics_process(delta):
-
+	
+	# ==================================================
+	# Gravity & Jump
+	# ==================================================
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	else:
+		# เมื่ออยู่บนพื้น แล้วกด Spacebar ให้ใส่แรงกระโดด
+		if Input.is_action_just_pressed("ui_accept"):
+			velocity.y = jump_velocity
 	# ==================================================
 	# ถ้าจบเกมแล้ว
 	# ==================================================

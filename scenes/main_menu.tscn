@@ -5,6 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://bt5orbjxxtbxi" path="res://assets/models/Play.png" id="3_wu84c"]
 [ext_resource type="AudioStream" uid="uid://d3s2h3yd420lb" path="res://assets/sounds/switch_004.ogg" id="4_wu84c"]
 [ext_resource type="AudioStream" uid="uid://dokcebox86p8y" path="res://assets/sounds/At The Shore.mp3" id="5_8ln24"]
+[ext_resource type="Texture2D" uid="uid://csuxddv1xh17h" path="res://assets/models/howtest.jpg" id="6_rtw2f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
+bg_color = Color(0.87058824, 0, 0.20784314, 1)
 
 [node name="MainMenu" type="Control" unique_id=1230989307]
 layout_mode = 3
@@ -40,5 +44,40 @@ stream = ExtResource("4_wu84c")
 stream = ExtResource("5_8ln24")
 volume_db = -10.105
 autoplay = true
+
+[node name="HowToPlayButton" type="Button" parent="." unique_id=1770800]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 23.0
+offset_right = 133.0
+offset_bottom = 54.0
+text = "How to play"
+
+[node name="HowToPlayPanel" type="Control" parent="." unique_id=1675959631]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HowToPlayImage" type="TextureRect" parent="HowToPlayPanel" unique_id=1797751193]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 3.0
+offset_right = 1072.0
+offset_bottom = 670.0
+texture = ExtResource("6_rtw2f")
+
+[node name="CloseButton" type="Button" parent="HowToPlayPanel" unique_id=2053157925]
+layout_mode = 0
+offset_left = 1035.0
+offset_top = 4.0
+offset_right = 1072.0
+offset_bottom = 77.0
+theme_override_font_sizes/font_size = 47
+theme_override_styles/normal = SubResource("StyleBoxFlat_1vivr")
+text = "X"
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
