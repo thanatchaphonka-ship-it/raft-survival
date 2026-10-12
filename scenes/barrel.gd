@@ -48,6 +48,10 @@ func _process(delta):
 
 				collected = true
 
+				# 🔊 เล่นเสียงเก็บของที่ตัว Player
+				if player.has_method("play_pickup_sound"):
+					player.play_pickup_sound()
+
 				# Barrel ให้ Wood +2
 				if player.has_method("add_wood"):
 

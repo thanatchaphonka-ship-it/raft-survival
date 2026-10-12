@@ -550,7 +550,11 @@ func attack_player(delta):
 
 		finish_attack()
 
+# 🔊 สั่งเล่นเสียงฉลามโจมตีที่ตัว Player
+	if player != null and player.has_method("play_shark_attack_sound"):
+		player.play_shark_attack_sound()
 
+	# ... (โค้ดทำความเสียหาย / ลดเลือดผู้เล่นเดิมของคุณ) ...
 # =========================================================
 # 💥 DAMAGE
 # =========================================================
@@ -731,3 +735,10 @@ func rotate_toward_direction(
 		target_angle,
 		turn_speed * delta
 	)
+@onready var shark_attack_sound: AudioStreamPlayer = $SharkAttackSound
+
+func play_shark_attack_sound():
+	if shark_attack_sound != null:
+		shark_attack_sound.play()
+
+	

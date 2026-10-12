@@ -7,6 +7,8 @@ extends CharacterBody3D
 @export var gravity := 9.8
 @export var fall_death_height := -10.0
 @export var jump_velocity := 8.0 # 👈 เพิ่มตัวแปรแรงกระโดดตรงนี้
+@onready var eat_sound: AudioStreamPlayer = $EatSound
+@onready var pickup_sound: AudioStreamPlayer = $PickupSound
 
 # ==================================================
 # RAFT
@@ -404,6 +406,9 @@ func upgrade_raft():
 	# เพิ่ม Level
 	raft_level = next_level
 
+	# 🔊 เล่นเสียงอัปเกรดแพ (ตอกค้อน)
+	play_upgrade_sound()
+
 	# สลับเปลี่ยนโมเดลแพตัวใหม่
 	update_raft_size()
 
@@ -428,8 +433,7 @@ func upgrade_raft():
 
 	# อัปเดตปุ่ม
 	update_upgrade_buttons()
-
-
+	
 # ==================================================
 # อัปเดตสถานะปุ่ม Upgrade
 # ==================================================
@@ -861,3 +865,28 @@ func _on_win_home_button_pressed() -> void:
 	get_tree().change_scene_to_file(
 		"res://scenes/main_menu.tscn"
 	)
+	
+func _process(delta: float) -> void:
+	if Input.is_key_pressed(KEY_E):
+		if eat_sound != null:
+			if not eat_sound.playing:
+				print("🔊 กด E สำเร็จ!")
+				eat_sound.play()
+				
+
+func play_pickup_sound():
+	if pickup_sound != null:
+		pickup_sound.play()
+
+
+@onready var upgrade_sound: AudioStreamPlayer = $UpgradeSound
+
+func play_upgrade_sound():
+	if upgrade_sound != null:
+		upgrade_sound.play()
+		
+@onready var shark_attack_sound: AudioStreamPlayer = $SharkAttackSound
+
+func play_shark_attack_sound():
+	if shark_attack_sound != null:
+		shark_attack_sound.play()

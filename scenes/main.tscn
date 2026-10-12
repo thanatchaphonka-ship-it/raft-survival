@@ -12,9 +12,13 @@
 [ext_resource type="Script" uid="uid://cp5nja6pdotdg" path="res://scenes/fish.gd" id="6_o6xl0"]
 [ext_resource type="PackedScene" uid="uid://bi6mkjomv3bd6" path="res://assets/models/fish.glb" id="7_tipki"]
 [ext_resource type="Script" uid="uid://dq0dfw4njsuq0" path="res://scenes/fish_spawner.gd" id="8_85g3d"]
+[ext_resource type="AudioStream" uid="uid://crvy1pjxkrvyg" path="res://assets/sounds/eating.mp3" id="8_yc10j"]
 [ext_resource type="PackedScene" uid="uid://buyskv2suesem" path="res://scenes/fish.tscn" id="9_choun"]
+[ext_resource type="AudioStream" uid="uid://cv7r271fmpm4p" path="res://assets/sounds/pop.mp3" id="9_jscy8"]
+[ext_resource type="AudioStream" uid="uid://cq1i13ttv522n" path="res://assets/sounds/hammering.mp3" id="10_pm3ni"]
 [ext_resource type="Script" uid="uid://vyn6f7x061qp" path="res://scenes/barrel.gd" id="10_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cqp5coosxxoqm" path="res://assets/models/Barrel.glb" id="11_eb6dy"]
+[ext_resource type="AudioStream" uid="uid://qgmxoyuq2vje" path="res://assets/sounds/retro.mp3" id="11_y6deb"]
 [ext_resource type="Script" uid="uid://byjs8mn33hly3" path="res://scenes/barrel_spawner.gd" id="12_trceg"]
 [ext_resource type="PackedScene" uid="uid://t8p6sv53htyd" path="res://scenes/barrel.tscn" id="13_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://db8340r4dbypa" path="res://scenes/shark.tscn" id="14_jkv2x"]
@@ -331,6 +335,18 @@ shape = SubResource("CapsuleShape3D_14cdr")
 
 [node name="Camera3D" type="Camera3D" parent="PlayerController" unique_id=482653651]
 transform = Transform3D(1, 0, 0, 0, 0.96271354, 0.27052307, 0, -0.27052307, 0.96271354, 0, 4.3369365, 7.076728)
+
+[node name="EatSound" type="AudioStreamPlayer" parent="PlayerController" unique_id=28583719]
+stream = ExtResource("8_yc10j")
+
+[node name="PickupSound" type="AudioStreamPlayer" parent="PlayerController" unique_id=2112392431]
+stream = ExtResource("9_jscy8")
+
+[node name="UpgradeSound" type="AudioStreamPlayer" parent="PlayerController" unique_id=368340148]
+stream = ExtResource("10_pm3ni")
+
+[node name="SharkAttackSound" type="AudioStreamPlayer" parent="PlayerController" unique_id=2123781188]
+stream = ExtResource("11_y6deb")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=533159529]
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0.11048317, 0.25661504, -0.02951336)

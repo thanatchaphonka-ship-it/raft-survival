@@ -5,6 +5,7 @@ extends Area3D
 @export var collect_distance := 3.0
 @export var water_level := 0.0 # ระดับความสูงผิวน้ำ
 
+
 var player: Node3D = null
 var dock: Node3D = null
 var collecting := false
@@ -65,6 +66,10 @@ func _process(delta):
 		)
 
 		if global_position.distance_to(player.global_position) < 0.3:
+
+			# 🔊 สั่งเล่นเสียงเก็บของที่ตัว Player
+			if player.has_method("play_pickup_sound"):
+				player.play_pickup_sound()
 
 			if player.has_method("add_wood"):
 				player.add_wood()
