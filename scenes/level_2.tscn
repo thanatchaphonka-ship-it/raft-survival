@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://cqujyqtwjg086"]
 
+[ext_resource type="Script" uid="uid://sciyakwsae76" path="res://scenes/level_2.gd" id="1_7egwj"]
 [ext_resource type="Texture2D" uid="uid://b3op84kpjx6pg" path="res://assets/models/open.png" id="1_pc3at"]
 [ext_resource type="Texture2D" uid="uid://dn06j2eby8vj" path="res://assets/models/Dockdock.png" id="1_vwfin"]
 [ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="2_63d2t"]
@@ -8,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://caimavamey5i7" path="res://assets/models/Stop.png" id="4_45kkt"]
 [ext_resource type="PackedScene" uid="uid://pf5sn3qxkn7x" path="res://scenes/dock_2.tscn" id="4_pc3at"]
 [ext_resource type="PackedScene" uid="uid://2lvi2x7h37f2" path="res://scenes/dock_3.tscn" id="5_bgibu"]
+[ext_resource type="Texture2D" uid="uid://i2c7mbqgs6i5" path="res://assets/models/fishcy.png" id="5_taw0e"]
 [ext_resource type="PackedScene" uid="uid://b0vehhyvixv4i" path="res://scenes/dock_4.tscn" id="6_73m23"]
 [ext_resource type="PackedScene" uid="uid://7jgpslfsgiv8" path="res://assets/models/player.glb" id="7_45kkt"]
 [ext_resource type="AudioStream" uid="uid://crvy1pjxkrvyg" path="res://assets/sounds/eating.mp3" id="8_taw0e"]
@@ -163,6 +165,7 @@ subdivide_width = 255
 subdivide_depth = 255
 
 [node name="Main" type="Node3D" unique_id=1435458834]
+script = ExtResource("1_7egwj")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=927021293]
 
@@ -176,6 +179,31 @@ toggle_mode = true
 texture_normal = ExtResource("1_pc3at")
 texture_pressed = ExtResource("2_bgibu")
 
+[node name="Stop" type="TextureButton" parent="CanvasLayer" unique_id=515734948]
+offset_left = 892.00006
+offset_top = 12.0
+offset_right = 1400.0
+offset_bottom = 503.0
+scale = Vector2(0.09856432, 0.09856432)
+texture_normal = ExtResource("4_45kkt")
+
+[node name="Dockdock2" type="Sprite2D" parent="CanvasLayer" unique_id=885428120]
+position = Vector2(1050.1136, 31.6)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_vwfin")
+
+[node name="Fishcy" type="Sprite2D" parent="CanvasLayer" unique_id=2134508106]
+position = Vector2(1053.1136, 57.599995)
+scale = Vector2(0.06084611, 0.060298957)
+texture = ExtResource("5_taw0e")
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=1944371392]
+offset_left = 904.0
+offset_top = 57.0
+offset_right = 944.0
+offset_bottom = 80.0
+text = "ESC"
+
 [node name="Day" type="Label" parent="CanvasLayer" unique_id=1503450976]
 offset_left = 549.0
 offset_top = 51.0
@@ -188,10 +216,10 @@ text = "Day2"
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -122.0
-offset_top = 25.0
-offset_right = -29.0
-offset_bottom = 48.0
+offset_left = -70.0
+offset_top = 24.0
+offset_right = 23.0
+offset_bottom = 47.0
 grow_horizontal = 0
 text = " x 0"
 
@@ -199,12 +227,12 @@ text = " x 0"
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -122.0
-offset_top = 50.0
-offset_right = -62.0
-offset_bottom = 73.0
+offset_left = -71.0
+offset_top = 47.0
+offset_right = -11.0
+offset_bottom = 70.0
 grow_horizontal = 0
-text = "  x 0"
+text = " x 0"
 
 [node name="HungerBar" type="ProgressBar" parent="CanvasLayer" unique_id=821320922]
 offset_left = 20.0
@@ -220,7 +248,7 @@ offset_left = 20.0
 offset_top = 80.0
 offset_right = 114.0
 offset_bottom = 103.0
-text = "🍗 HUNGER"
+text = " HUNGER"
 
 [node name="HealthBar" type="ProgressBar" parent="CanvasLayer" unique_id=894760464]
 offset_left = 20.0
@@ -235,7 +263,7 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 108.0
 offset_bottom = 43.0
-text = "❤️ HEALTH"
+text = " HEALTH"
 
 [node name="UpgradeButton" type="Button" parent="CanvasLayer" unique_id=1421252775]
 anchors_preset = 1
@@ -360,21 +388,6 @@ visible = false
 position = Vector2(1009, 38)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_vwfin")
-
-[node name="Stop" type="TextureButton" parent="CanvasLayer" unique_id=515734948]
-offset_left = 892.00006
-offset_top = 12.0
-offset_right = 1400.0
-offset_bottom = 503.0
-scale = Vector2(0.09856432, 0.09856432)
-texture_normal = ExtResource("4_45kkt")
-
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=1944371392]
-offset_left = 904.0
-offset_top = 57.0
-offset_right = 944.0
-offset_bottom = 80.0
-text = "ESC"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=626266612]
 transform = Transform3D(1, 0, 0, 0, 0.9090291, 0.4167327, 0, -0.4167327, 0.9090291, 0.6086266, 1.5572824, 13.775959)

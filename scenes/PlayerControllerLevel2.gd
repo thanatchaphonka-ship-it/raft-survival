@@ -110,10 +110,10 @@ func _ready():
 		health_bar.value = health
 
 	if wood_count_label != null:
-		wood_count_label.text = " 🪵 x  " + str(wood_count)
+		wood_count_label.text = "   x  " + str(wood_count)
 
 	if food_count_label != null:
-		food_count_label.text = " 🍖 x  " + str(food_count)
+		food_count_label.text = "   x  " + str(food_count)
 
 	time_left = game_time
 	update_timer_ui()
@@ -241,7 +241,7 @@ func add_wood():
 	print("🪵 เก็บไม้ได้: ", wood_count)
 
 	if wood_count_label != null:
-		wood_count_label.text = " 🪵 x  " + str(wood_count)
+		wood_count_label.text = "  x  " + str(wood_count)
 
 	update_upgrade_buttons()
 
@@ -292,7 +292,7 @@ func upgrade_raft():
 	update_raft_size()
 
 	if wood_count_label != null:
-		wood_count_label.text = " 🪵 x  " + str(wood_count)
+		wood_count_label.text = "  x  " + str(wood_count)
 
 	update_upgrade_buttons()
 
@@ -351,7 +351,7 @@ func add_food():
 	print("🍖 เก็บอาหารได้: ", food_count)
 
 	if food_count_label != null:
-		food_count_label.text = " 🍖 x  " + str(food_count)
+		food_count_label.text = "  x  " + str(food_count)
 
 
 func eat_food():
@@ -367,7 +367,7 @@ func eat_food():
 		eat_sound.play()
 
 	if food_count_label != null:
-		food_count_label.text = " 🍖 x  " + str(food_count)
+		food_count_label.text = "  x  " + str(food_count)
 
 	if hunger_bar != null:
 		hunger_bar.value = hunger
