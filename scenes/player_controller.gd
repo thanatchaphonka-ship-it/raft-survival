@@ -14,7 +14,7 @@ extends CharacterBody3D
 # RAFT
 # ==================================================
 
-var wood_count := 0
+var wood_count := 50
 var max_wood := 100
 
 var raft_level := 1
@@ -56,8 +56,8 @@ var is_dead := false
 # GAME TIMER
 # ==================================================
 
-var game_time := 90.0
-var time_left := 90.0
+var game_time := 60.0
+var time_left := 60.0
 
 # ==================================================
 # NODE
@@ -890,3 +890,7 @@ func play_upgrade_sound():
 func play_shark_attack_sound():
 	if shark_attack_sound != null:
 		shark_attack_sound.play()
+
+
+func _on_next_level_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/level_2.tscn")

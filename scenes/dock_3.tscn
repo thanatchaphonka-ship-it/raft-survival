@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bvypyt6edpbax" path="res://assets/models/Bucket of Fish.glb" id="3_y8u5f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cyxt3"]
-size = Vector3(5.966591, 1, 2.0479126)
+size = Vector3(5.966591, 1, 2.457901)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_28hhg"]
 size = Vector3(1.317627, 0.6085205, 1.2686768)
@@ -21,7 +21,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.90527, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0481675, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=389772611]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.057552338, 1.1920929e-07, 0.20761108)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.057552338, 1.1920929e-07, 0.4126053)
 shape = SubResource("BoxShape3D_cyxt3")
 
 [node name="Root Scene" parent="." unique_id=1678904076 instance=ExtResource("2_y8u5f")]

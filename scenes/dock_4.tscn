@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://1fimgkcraoaw" path="res://assets/models/Tent by J-Toastie - 0LnXUwcQzk.glb" id="5_u2g7f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u2g7f"]
-size = Vector3(5.966591, 1, 4.203766)
+size = Vector3(5.966591, 1, 4.5578384)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dhuwy"]
 size = Vector3(1.317627, 0.6085205, 1.2686768)
@@ -32,7 +32,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.90527, 0, 2.0881143)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0481675, 0, 2.0881143)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=389772611]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.057552338, 1.1920929e-07, 1.2855377)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.057552338, 1.1920929e-07, 1.462574)
 shape = SubResource("BoxShape3D_u2g7f")
 
 [node name="Root Scene" parent="." unique_id=1678904076 instance=ExtResource("2_c7cnt")]

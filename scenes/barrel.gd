@@ -12,132 +12,89 @@ var collected := false
 
 
 func _ready():
+	find_player()
+	find_dock()
 
+
+func find_player():
 	player = get_tree().current_scene.get_node_or_null("PlayerController")
-	dock = get_tree().current_scene.get_node_or_null("Dock")
+
+
+func find_dock():
+	dock = get_tree().current_scene.find_child("Dock", true, false)
 
 
 func _process(delta):
-
-	# ==================================================
-	# หา Player
-	# ==================================================
-
-	if player == null:
-
-		player = get_tree().current_scene.get_node_or_null("PlayerController")
-
+	if player == null or not is_instance_valid(player):
+		find_player()
 		if player == null:
 			return
 
+	# ค้นหาแพใหม่หลังอัปเกรด
+	if dock == null or not is_instance_valid(dock):
+		find_dock()
 
-	# ==================================================
-	# กำลังถูกเก็บ
-	# ==================================================
-
+	# กำลังถูกดึงเข้าหาผู้เล่น
 	if collecting:
-
 		global_position = global_position.move_toward(
 			player.global_position,
 			move_speed * delta
 		)
 
 		if global_position.distance_to(player.global_position) < 0.3:
-
 			if not collected:
-
 				collected = true
 
-				# 🔊 เล่นเสียงเก็บของที่ตัว Player
 				if player.has_method("play_pickup_sound"):
 					player.play_pickup_sound()
 
-				# Barrel ให้ Wood +2
 				if player.has_method("add_wood"):
-
 					player.add_wood()
 					player.add_wood()
 
 				print("🛢️ เก็บ Barrel แล้ว! Wood +2")
-
 				queue_free()
-
 		return
 
+	# ตรวจระยะผู้เล่น
+	if global_position.distance_to(player.global_position) <= collect_distance:
+		collecting = true
+		return
 
-	# ==================================================
-	# ตรวจระยะจากผู้เล่น
-	# ==================================================
+	# ตรวจขอบเขตแพปัจจุบัน
+	if is_inside_raft():
+		return
 
-	var distance_to_player = global_position.distance_to(
-		player.global_position
+	# ลอยไปข้างหน้าตามระบบเดิม
+	global_position.z += float_speed * delta
+
+
+func is_inside_raft() -> bool:
+	if dock == null or not is_instance_valid(dock):
+		return false
+
+	var static_body = dock.find_child("StaticBody3D", true, false)
+
+	if static_body == null:
+		return false
+
+	var collision = static_body.find_child(
+		"CollisionShape3D", true, false
 	)
 
-	if distance_to_player <= collect_distance:
+	if collision == null or collision.shape == null:
+		return false
 
-		collecting = true
+	if not collision.shape is BoxShape3D:
+		return false
 
-		return
+	var shape: BoxShape3D = collision.shape
+	var local_pos = collision.to_local(global_position)
 
+	var half_x = shape.size.x / 2.0
+	var half_z = shape.size.z / 2.0
 
-	# ==================================================
-	# ตรวจแพ
-	# ==================================================
-
-	if dock != null:
-
-		# หา CollisionShape3D ที่อยู่ข้างใน Dock
-		var collision = dock.find_child(
-			"CollisionShape3D",
-			true,
-			false
-		)
-
-		if collision != null:
-
-			var shape = collision.shape
-
-			# ตรวจว่า Collision เป็น BoxShape3D หรือไม่
-			if shape is BoxShape3D:
-
-				var raft_center = collision.global_position
-
-				# ขนาด Collision จริงหลังจากโดน Scale
-				var half_x = (
-					shape.size.x
-					* collision.global_transform.basis.x.length()
-					/ 2.0
-				)
-
-				var half_z = (
-					shape.size.z
-					* collision.global_transform.basis.z.length()
-					/ 2.0
-				)
-
-
-				# ==========================================
-				# ตรวจว่า Barrel อยู่ในพื้นที่แพหรือไม่
-				# ==========================================
-
-				var inside_x = abs(
-					global_position.x - raft_center.x
-				) <= half_x
-
-				var inside_z = abs(
-					global_position.z - raft_center.z
-				) <= half_z
-
-
-				if inside_x and inside_z:
-
-					# Barrel อยู่บนแพแล้ว
-					# หยุดการลอย
-					return
-
-
-	# ==================================================
-	# ลอยไปข้างหน้า
-	# ==================================================
-
-	global_position.z += float_speed * delta
+	return (
+		abs(local_pos.x) <= half_x
+		and abs(local_pos.z) <= half_z
+	)
