@@ -31,3 +31,4 @@ transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.0481462, 0.5, -0.3583
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=389772611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0356827, 1.1920929e-07, 0.39435577)
 shape = SubResource("BoxShape3D_36kbm")
+debug_fill = false

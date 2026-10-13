@@ -10,6 +10,18 @@ var play_default_scale: Vector2
 var howto_default_scale: Vector2
 
 func _ready() -> void:
+# ค้นหาปุ่ม BGMButton ใน CanvasLayer แล้วเชื่อมสัญญาณกดปุ่ม
+	var bgm_btn = get_node_or_null("CanvasLayer/BGMButton")
+	if bgm_btn == null:
+		bgm_btn = get_node_or_null("BGMButton")
+		
+	if bgm_btn != null:
+		bgm_btn.toggled.connect(_on_bgm_button_toggled)
+
+
+	
+	if has_node("BGMButton"):
+		$BGMButton.toggled.connect(_on_bgm_button_toggled)
 	# ตั้งค่า Pivot Offset ปุ่มให้อยู่ตรงกลาง เพื่อให้ขยาย/ย่อสวยงาม
 	play_button.pivot_offset = play_button.size / 2.0
 	how_to_play_button.pivot_offset = how_to_play_button.size / 2.0
@@ -36,6 +48,7 @@ func _ready() -> void:
 	
 	# ซ่อนหน้าต่างไว้ตอนเริ่มเกม
 	how_to_play_panel.visible = false
+	
 
 # ==================== Animation ปุ่ม Play ====================
 func _on_play_button_mouse_entered() -> void:
@@ -84,3 +97,23 @@ func _on_how_to_play_button_pressed() -> void:
 func _on_close_button_pressed() -> void:
 	click_sound.play()
 	how_to_play_panel.visible = false
+
+# ==================================================
+# ฟังก์ชันเปิด-ปิดเสียงเพลง BGM
+# ==================================================
+
+
+	# หา Index ของ Bus ที่ชื่อ "Music" แล้วปิด/เปิดเสียง (Mute)
+
+func _on_bgm_button_toggled(toggled_on: bool) -> void:
+	if click_sound != null:
+		click_sound.play()
+
+	var bus_idx = AudioServer.get_bus_index("Music")
+	if bus_idx != -1:
+		AudioServer.set_bus_mute(bus_idx, toggled_on)
+
+	if toggled_on:
+		print("🔇 ปิดเสียงดนตรี BGM")
+	else:
+		print("🔊 เปิดเสียงดนตรี BGM")

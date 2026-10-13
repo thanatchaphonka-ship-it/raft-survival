@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bt5orbjxxtbxi" path="res://assets/models/Play.png" id="3_wu84c"]
 [ext_resource type="AudioStream" uid="uid://d3s2h3yd420lb" path="res://assets/sounds/switch_004.ogg" id="4_wu84c"]
 [ext_resource type="AudioStream" uid="uid://dokcebox86p8y" path="res://assets/sounds/At The Shore.mp3" id="5_8ln24"]
-[ext_resource type="Texture2D" uid="uid://cvejle8gapkag" path="res://assets/models/Howtoplay.png" id="6_oa1go"]
-[ext_resource type="Texture2D" uid="uid://csuxddv1xh17h" path="res://assets/models/howtest.jpg" id="6_rtw2f"]
+[ext_resource type="Texture2D" uid="uid://bve5kywj2njb3" path="res://assets/models/Howtoplayerrrrr.png" id="6_oa1go"]
+[ext_resource type="Texture2D" uid="uid://wil77an8bo42" path="res://assets/models/HowToPlay.png" id="7_oa1go"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
 bg_color = Color(0.87058824, 0, 0.20784314, 1)
@@ -70,7 +70,8 @@ offset_left = 112.0
 offset_top = 3.0
 offset_right = 1072.0
 offset_bottom = 670.0
-texture = ExtResource("6_rtw2f")
+texture = ExtResource("7_oa1go")
+expand_mode = 1
 
 [node name="CloseButton" type="Button" parent="HowToPlayPanel" unique_id=2053157925]
 layout_mode = 0

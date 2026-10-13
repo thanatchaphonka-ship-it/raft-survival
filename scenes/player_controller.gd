@@ -174,7 +174,17 @@ func _ready():
 	update_upgrade_buttons()
 	update_raft_size()
 
+# ค้นหาโหนด BGMButton ที่อยู่ในฉาก main.tscn แล้วเชื่อมต่อสัญญาณ
+	var bgm_btn = get_node_or_null("CanvasLayer/BGMButton") # ปรับ Path ให้ตรงกับ Scene Tree ของคุณ
+	if bgm_btn != null:
+		bgm_btn.toggled.connect(_on_bgm_button_toggled)
 
+func _on_bgm_button_toggled(toggled_on: bool) -> void:
+	# ปิด/เปิด Mute บน Audio Bus ชื่อ "Music"
+	print("TEST CLICK: ", toggled_on) # เพิ่มบรรทัดนี้เพื่อเช็ก
+	var bus_idx = AudioServer.get_bus_index("Music")
+	if bus_idx != -1:
+		AudioServer.set_bus_mute(bus_idx, toggled_on)
 # ==================================================
 # GAME TIMER UI
 # ==================================================
