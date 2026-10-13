@@ -1,7 +1,10 @@
 [gd_scene format=4 uid="uid://cqujyqtwjg086"]
 
+[ext_resource type="Script" uid="uid://sciyakwsae76" path="res://scenes/level_2.gd" id="1_73m23"]
 [ext_resource type="Texture2D" uid="uid://dn06j2eby8vj" path="res://assets/models/Dockdock.png" id="1_vwfin"]
 [ext_resource type="PackedScene" uid="uid://dk1qg3yw7056c" path="res://assets/models/Dock.glb" id="2_63d2t"]
+[ext_resource type="Texture2D" uid="uid://b3op84kpjx6pg" path="res://assets/models/open.png" id="2_bgibu"]
+[ext_resource type="Texture2D" uid="uid://ithcu0vp0st5" path="res://assets/models/off.png" id="3_73m23"]
 [ext_resource type="Script" uid="uid://bditud3lufbsh" path="res://scenes/PlayerControllerLevel2.gd" id="3_vwfin"]
 [ext_resource type="PackedScene" uid="uid://pf5sn3qxkn7x" path="res://scenes/dock_2.tscn" id="4_pc3at"]
 [ext_resource type="PackedScene" uid="uid://2lvi2x7h37f2" path="res://scenes/dock_3.tscn" id="5_bgibu"]
@@ -24,6 +27,8 @@
 [ext_resource type="PackedScene" uid="uid://db8340r4dbypa" path="res://scenes/shark.tscn" id="22_y6uxt"]
 [ext_resource type="AudioStream" uid="uid://bh7h8t563jmua" path="res://assets/sounds/Longing and Concern.mp3" id="23_r72fi"]
 [ext_resource type="PackedScene" uid="uid://0tha14403276" path="res://assets/models/Ocean by Poly by Google - faUostvShTI.glb" id="24_00rct"]
+[ext_resource type="Shader" uid="uid://bri0ohntsv7im" path="res://assets/models/ocean.gdshader" id="25_va6c3"]
+[ext_resource type="Script" uid="uid://dy168rm0f2t55" path="res://scenes/ocean.gd" id="26_pc3at"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dp3eg"]
 bg_color = Color(0.2, 0.2, 0.2, 1)
@@ -96,7 +101,68 @@ sky = SubResource("Sky_jbj1t")
 ambient_light_source = 3
 reflected_light_source = 2
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bgibu"]
+frequency = 0.02
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2f3dj"]
+noise = SubResource("FastNoiseLite_bgibu")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_73m23"]
+frequency = 0.02
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yq6so"]
+noise = SubResource("FastNoiseLite_73m23")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_45kkt"]
+frequency = 0.05
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fv21b"]
+noise = SubResource("FastNoiseLite_45kkt")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_taw0e"]
+render_priority = 0
+shader = ExtResource("25_va6c3")
+shader_parameter/wave_a = Vector4(1, 0.3, 0.22, 38)
+shader_parameter/wave_b = Vector4(0.7, 0.7, 0.18, 21)
+shader_parameter/wave_c = Vector4(-0.4, 0.9, 0.14, 12)
+shader_parameter/wave_d = Vector4(0.9, -0.5, 0.1, 7.5)
+shader_parameter/wave_e = Vector4(-0.8, -0.3, 0.08, 4.5)
+shader_parameter/amplitude = 0.030000001425
+shader_parameter/wave_speed = 1.0
+shader_parameter/shallow_color = Color(0.02, 0.62, 0.66, 1)
+shader_parameter/deep_color = Color(0.01, 0.1, 0.26, 1)
+shader_parameter/absorption = 0.25
+shader_parameter/refraction_strength = 0.04
+shader_parameter/sss_color = Color(0.05, 0.55, 0.45, 1)
+shader_parameter/sss_strength = 1.0
+shader_parameter/normal_a = SubResource("NoiseTexture2D_yq6so")
+shader_parameter/normal_b = SubResource("NoiseTexture2D_fv21b")
+shader_parameter/normal_scale = 0.08
+shader_parameter/scroll_a = Vector2(0.03, 0.02)
+shader_parameter/scroll_b = Vector2(-0.02, 0.04)
+shader_parameter/normal_strength = 0.6
+shader_parameter/normal_fade_start = 30.0
+shader_parameter/normal_fade_end = 120.0
+shader_parameter/water_roughness = 0.04
+shader_parameter/foam_noise = SubResource("NoiseTexture2D_2f3dj")
+shader_parameter/foam_color = Color(0.95, 0.98, 1, 1)
+shader_parameter/foam_amount = 0.7
+shader_parameter/crest_threshold = 0.55
+shader_parameter/foam_noise_scale = 0.05
+shader_parameter/shore_foam_width = 0.6
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7egwj"]
+size = Vector2(120, 120)
+subdivide_width = 255
+subdivide_depth = 255
+
 [node name="Main" type="Node3D" unique_id=1435458834]
+script = ExtResource("1_73m23")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=927021293]
 
@@ -285,6 +351,16 @@ offset_bottom = 104.0
 theme_override_font_sizes/font_size = 38
 text = "Day2"
 
+[node name="BGMButton" type="TextureButton" parent="CanvasLayer" unique_id=1332556598]
+offset_left = 944.0
+offset_top = 4.0
+offset_right = 1388.0
+offset_bottom = 566.0
+scale = Vector2(0.11153672, 0.11153672)
+toggle_mode = true
+texture_normal = ExtResource("2_bgibu")
+texture_pressed = ExtResource("3_73m23")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=626266612]
 transform = Transform3D(1, 0, 0, 0, 0.9090291, 0.4167327, 0, -0.4167327, 0.9090291, 0.6086266, 1.5572824, 13.775959)
 
@@ -358,6 +434,7 @@ stream = ExtResource("11_3buw8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=533159529]
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0.11048317, 0.25661504, -0.02951336)
+visible = false
 material_override = SubResource("StandardMaterial3D_o6xl0")
 mesh = SubResource("PlaneMesh_8vrlf")
 
@@ -416,10 +493,12 @@ damage = 12
 [node name="OceanSound" type="AudioStreamPlayer" parent="." unique_id=355772419]
 stream = SubResource("AudioStreamMP3_yc10j")
 autoplay = true
+bus = &"Music"
 
 [node name="LongingSound" type="AudioStreamPlayer" parent="." unique_id=1761008956]
 stream = ExtResource("23_r72fi")
 autoplay = true
+bus = &"Music"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=410665049]
 environment = SubResource("Environment_htemk")
@@ -427,6 +506,12 @@ environment = SubResource("Environment_htemk")
 [node name="Ocean by Poly by Google - faUostvShTI" parent="." unique_id=359130349 instance=ExtResource("24_00rct")]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.14009333, 0.15148926, -2.069481)
 visible = false
+
+[node name="Ocean" type="MeshInstance3D" parent="." unique_id=1435656261]
+transform = Transform3D(150, 0, 0, 0, 150, 0, 0, 0, 150, 0, -4.167001, -51.82715)
+material_override = SubResource("ShaderMaterial_taw0e")
+mesh = SubResource("PlaneMesh_7egwj")
+script = ExtResource("26_pc3at")
 
 [connection signal="pressed" from="CanvasLayer/GameOverPanel/HomeButton" to="PlayerController" method="_on_home_button_pressed"]
 
