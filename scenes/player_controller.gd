@@ -3,24 +3,27 @@ extends CharacterBody3D
 @export var raft_lv2_scene: PackedScene
 @export var raft_lv3_scene: PackedScene
 @export var raft_lv4_scene: PackedScene
+
 @export var speed := 5.0
 @export var gravity := 9.8
 @export var fall_death_height := -10.0
-@export var jump_velocity := 8.0 # 👈 เพิ่มตัวแปรแรงกระโดดตรงนี้
+@export var jump_velocity := 8.0
+
 @onready var eat_sound: AudioStreamPlayer = $EatSound
 @onready var pickup_sound: AudioStreamPlayer = $PickupSound
+@onready var upgrade_sound: AudioStreamPlayer = $UpgradeSound
+@onready var shark_attack_sound: AudioStreamPlayer = $SharkAttackSound
 
 # ==================================================
 # RAFT
 # ==================================================
 
-var wood_count := 50
+var wood_count := 0
 var max_wood := 100
 
 var raft_level := 1
 var max_raft_level := 4
 
-# ราคาการอัปเกรดแพ
 var raft_upgrade_costs = {
 	2: 5,
 	3: 8,
@@ -60,7 +63,7 @@ var game_time := 60.0
 var time_left := 60.0
 
 # ==================================================
-# NODE
+# PLAYER MODEL
 # ==================================================
 
 @onready var animation_player: AnimationPlayer = $"Root Scene/AnimationPlayer"
@@ -76,14 +79,19 @@ var time_left := 60.0
 @onready var hunger_bar: ProgressBar = get_tree().current_scene.find_child("HungerBar", true, false)
 @onready var health_bar: ProgressBar = get_tree().current_scene.find_child("HealthBar", true, false)
 
-# Timer
 @onready var timer_label: Label = get_tree().current_scene.find_child("TimerLabel", true, false)
 
-# Game Over
+# ==================================================
+# GAME OVER
+# ==================================================
+
 @onready var game_over_panel: ColorRect = get_tree().current_scene.find_child("GameOverPanel", true, false)
 @onready var restart_button: Button = get_tree().current_scene.find_child("RestartButton", true, false)
 
-# Win
+# ==================================================
+# WIN
+# ==================================================
+
 @onready var win_panel: ColorRect = get_tree().current_scene.find_child("WinPanel", true, false)
 @onready var win_home_button: Button = get_tree().current_scene.find_child("WinHomeButton", true, false)
 
@@ -106,87 +114,47 @@ var time_left := 60.0
 
 @onready var dock: Node3D = get_tree().current_scene.find_child("Dock", true, false)
 
+
 # ==================================================
 # READY
 # ==================================================
 
 func _ready():
 
-	# =========================
-	# Hunger Bar
-	# =========================
-
 	if hunger_bar != null:
 		hunger_bar.max_value = max_hunger
 		hunger_bar.value = hunger
-
-	# =========================
-	# Health Bar
-	# =========================
 
 	if health_bar != null:
 		health_bar.max_value = max_health
 		health_bar.value = health
 
-	# =========================
-	# Wood UI
-	# =========================
-
 	if wood_count_label != null:
 		wood_count_label.text = " 🪵 x  " + str(wood_count)
-
-	# =========================
-	# Food UI
-	# =========================
 
 	if food_count_label != null:
 		food_count_label.text = " 🍖 x   " + str(food_count)
 
-	# =========================
-	# Game Timer
-	# =========================
-
 	time_left = game_time
 	update_timer_ui()
-
-	# =========================
-	# Game Over
-	# =========================
 
 	if game_over_panel != null:
 		game_over_panel.visible = false
 
-	# =========================
-	# Win Panel
-	# =========================
-
 	if win_panel != null:
 		win_panel.visible = false
 
-	# =========================
-	# Win Home Button
-	# =========================
+	if timer_label != null:
+		timer_label.visible = true
 
 	if win_home_button != null:
 		win_home_button.pressed.connect(_on_win_home_button_pressed)
 
-	# =========================
-	# Upgrade Panel
-	# =========================
-
 	if upgrade_panel != null:
 		upgrade_panel.visible = false
 
-	# =========================
-	# Upgrade Button
-	# =========================
-
 	if upgrade_button != null:
 		upgrade_button.pressed.connect(open_upgrade_panel)
-
-	# =========================
-	# Upgrade Level Buttons
-	# =========================
 
 	if level2_button != null:
 		level2_button.pressed.connect(upgrade_raft)
@@ -197,35 +165,18 @@ func _ready():
 	if level4_button != null:
 		level4_button.pressed.connect(upgrade_raft)
 
-	# =========================
-	# Close Upgrade Button
-	# =========================
-
 	if close_upgrade_button != null:
 		close_upgrade_button.pressed.connect(close_upgrade_panel)
-
-	# =========================
-	# Restart Button
-	# =========================
 
 	if restart_button != null:
 		restart_button.pressed.connect(restart_game)
 
-	# =========================
-	# อัปเดตปุ่ม Upgrade
-	# =========================
-
 	update_upgrade_buttons()
-
-	# =========================
-	# ตั้งขนาดแพเริ่มต้น
-	# =========================
-
 	update_raft_size()
 
 
 # ==================================================
-# GAME TIMER
+# GAME TIMER UI
 # ==================================================
 
 func update_timer_ui():
@@ -240,7 +191,7 @@ func update_timer_ui():
 
 
 # ==================================================
-# หมดเวลา
+# GAME OVER / WIN WHEN TIME IS UP
 # ==================================================
 
 func time_up():
@@ -251,14 +202,8 @@ func time_up():
 	is_dead = true
 	velocity = Vector3.ZERO
 
-	# ซ่อน Timer
-
 	if timer_label != null:
 		timer_label.visible = false
-
-	# =========================
-	# เช็กว่าแพถึง Lv.4 หรือยัง
-	# =========================
 
 	if raft_level >= 4:
 
@@ -276,25 +221,19 @@ func time_up():
 
 
 # ==================================================
-# เปลี่ยนขนาดแพตาม Level
-# ==================================================
-
-# ==================================================
-# เปลี่ยนโมเดลแพตาม Level
+# CHANGE RAFT MODEL BY LEVEL
 # ==================================================
 
 func update_raft_size():
 
-	# ค้นหาแพตัวเดิมในฉาก
 	var current_dock = get_tree().current_scene.find_child("Dock", true, false)
-	
+
 	if current_dock == null:
 		print("⚠️ หา Dock ไม่เจอ")
 		return
 
 	var next_scene: PackedScene = null
 
-	# เลือก Scene ตามเลเวล
 	if raft_level == 2:
 		next_scene = raft_lv2_scene
 	elif raft_level == 3:
@@ -302,16 +241,13 @@ func update_raft_size():
 	elif raft_level == 4:
 		next_scene = raft_lv4_scene
 
-	# ถ้าเลเวล 1 หรือยังไม่ได้ตั้งค่า Scene ให้ผ่านไป
 	if next_scene == null:
 		return
 
-	# สร้างแพอันใหม่ขึ้นมา
 	var new_dock = next_scene.instantiate()
-	new_dock.name = "Dock" # ตั้งชื่อว่า Dock เพื่อใช้อ้างอิงต่อได้
+	new_dock.name = "Dock"
 	new_dock.global_transform = current_dock.global_transform
 
-	# เพิ่มแพใหม่เข้าฉาก แล้วลบแพเดิมออก
 	get_tree().current_scene.add_child(new_dock)
 	current_dock.queue_free()
 
@@ -319,7 +255,7 @@ func update_raft_size():
 
 
 # ==================================================
-# เก็บไม้
+# ADD WOOD
 # ==================================================
 
 func add_wood():
@@ -329,10 +265,7 @@ func add_wood():
 
 	wood_count += 1
 
-	print(
-		"🪵 เก็บไม้ได้: ",
-		wood_count
-	)
+	print("🪵 เก็บไม้ได้: ", wood_count)
 
 	if wood_count_label != null:
 		wood_count_label.text = " 🪵 x  " + str(wood_count)
@@ -341,7 +274,7 @@ func add_wood():
 
 
 # ==================================================
-# เปิดหน้าต่าง Upgrade
+# UPGRADE PANEL
 # ==================================================
 
 func open_upgrade_panel():
@@ -350,15 +283,10 @@ func open_upgrade_panel():
 		return
 
 	upgrade_panel.visible = true
-
 	update_upgrade_buttons()
 
 	print("🛶 เปิดหน้าต่างอัปเกรดแพ")
 
-
-# ==================================================
-# ปิดหน้าต่าง Upgrade
-# ==================================================
 
 func close_upgrade_panel():
 
@@ -369,187 +297,128 @@ func close_upgrade_panel():
 
 
 # ==================================================
-# อัปเกรดแพ
-# ==================================================
-# ==================================================
-# อัปเกรดแพ
+# UPGRADE RAFT
 # ==================================================
 
 func upgrade_raft():
 
 	if raft_level >= max_raft_level:
-
 		print("🛶 แพถึง Lv.4 แล้ว")
-
 		update_upgrade_buttons()
-
 		return
 
 	var next_level = raft_level + 1
-
 	var required_wood = raft_upgrade_costs[next_level]
 
 	if wood_count < required_wood:
-
 		print(
 			"🪵 ไม้ไม่พอ | ต้องการ ",
 			required_wood,
 			" | มี ",
 			wood_count
 		)
-
 		return
 
-	# หักไม้
 	wood_count -= required_wood
-
-	# เพิ่ม Level
 	raft_level = next_level
 
-	# 🔊 เล่นเสียงอัปเกรดแพ (ตอกค้อน)
 	play_upgrade_sound()
-
-	# สลับเปลี่ยนโมเดลแพตัวใหม่
 	update_raft_size()
 
-	print(
-		"🛶 อัปเกรดแพเป็น Lv.",
-		raft_level
-	)
+	print("🛶 อัปเกรดแพเป็น Lv.", raft_level)
+	print("🪵 ใช้ไม้: ", required_wood)
+	print("🪵 ไม้เหลือ: ", wood_count)
 
-	print(
-		"🪵 ใช้ไม้:",
-		required_wood
-	)
-
-	print(
-		"🪵 ไม้เหลือ:",
-		wood_count
-	)
-
-	# อัปเดต Wood UI
 	if wood_count_label != null:
 		wood_count_label.text = " 🪵 x  " + str(wood_count)
 
-	# อัปเดตปุ่ม
 	update_upgrade_buttons()
-	
+
+
 # ==================================================
-# อัปเดตสถานะปุ่ม Upgrade
+# UPDATE UPGRADE BUTTONS
 # ==================================================
 
 func update_upgrade_buttons():
 
-	# =========================
-	# Lv.2 = 5 Wood
-	# =========================
-
 	if level2_button != null:
 
 		if raft_level >= 2:
-
 			level2_button.disabled = true
-			level2_button.text = "Lv.2  -  Completed"
+			level2_button.text = "Lv.2 - Completed"
 
 		elif wood_count < 5:
-
 			level2_button.disabled = true
-			level2_button.text = "Lv.2  -  5 Wood"
+			level2_button.text = "Lv.2 - 5 Wood"
 
 		else:
-
 			level2_button.disabled = false
-			level2_button.text = "Lv.2  -  5 Wood"
-
-
-	# =========================
-	# Lv.3 = 8 Wood
-	# =========================
+			level2_button.text = "Lv.2 - 5 Wood"
 
 	if level3_button != null:
 
 		if raft_level < 2:
-
 			level3_button.disabled = true
-			level3_button.text = "Lv.3  -  Locked"
+			level3_button.text = "Lv.3 - Locked"
 
 		elif raft_level >= 3:
-
 			level3_button.disabled = true
-			level3_button.text = "Lv.3  -  Completed"
+			level3_button.text = "Lv.3 - Completed"
 
 		elif wood_count < 8:
-
 			level3_button.disabled = true
-			level3_button.text = "Lv.3  -  8 Wood"
+			level3_button.text = "Lv.3 - 8 Wood"
 
 		else:
-
 			level3_button.disabled = false
-			level3_button.text = "Lv.3  -  8 Wood"
-
-
-	# =========================
-	# Lv.4 = 10 Wood
-	# =========================
+			level3_button.text = "Lv.3 - 8 Wood"
 
 	if level4_button != null:
 
 		if raft_level < 3:
-
 			level4_button.disabled = true
-			level4_button.text = "Lv.4  -  Locked"
+			level4_button.text = "Lv.4 - Locked"
 
 		elif raft_level >= 4:
-
 			level4_button.disabled = true
-			level4_button.text = "Lv.4  -  Completed"
+			level4_button.text = "Lv.4 - Completed"
 
 		elif wood_count < 10:
-
 			level4_button.disabled = true
-			level4_button.text = "Lv.4  -  10 Wood"
+			level4_button.text = "Lv.4 - 10 Wood"
 
 		else:
-
 			level4_button.disabled = false
-			level4_button.text = "Lv.4  -  10 Wood"
-	
+			level4_button.text = "Lv.4 - 10 Wood"
+
+
 # ==================================================
-# เก็บ Food
+# ADD FOOD
 # ==================================================
 
 func add_food():
 
-	print(
-		"🍖 add_food ถูกเรียก | Food ก่อนเพิ่ม = ",
-		food_count
-	)
+	print("🍖 add_food ถูกเรียก | Food ก่อนเพิ่ม = ", food_count)
 
 	if food_count >= max_food:
 		return
 
 	food_count += 1
 
-	print(
-		"🍖 Food หลังเพิ่ม = ",
-		food_count
-	)
+	print("🍖 Food หลังเพิ่ม = ", food_count)
 
 	if food_count_label != null:
 		food_count_label.text = " 🍖 x  " + str(food_count)
 
 
 # ==================================================
-# กิน Food
+# EAT FOOD
 # ==================================================
 
 func eat_food():
 
 	if food_count <= 0:
-
 		print("ไม่มี Food ให้กิน")
-
 		return
 
 	food_count -= 1
@@ -558,6 +427,9 @@ func eat_food():
 
 	if hunger > max_hunger:
 		hunger = max_hunger
+
+	if eat_sound != null:
+		eat_sound.play()
 
 	print(
 		"🍖 กิน Food! Food เหลือ = ",
@@ -574,50 +446,25 @@ func eat_food():
 
 
 # ==================================================
-# PHYSICS
+# PHYSICS / MOVEMENT / JUMP
 # ==================================================
 
 func _physics_process(delta):
-	
-	# ==================================================
-	# Gravity & Jump
-	# ==================================================
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-	else:
-		# เมื่ออยู่บนพื้น แล้วกด Spacebar ให้ใส่แรงกระโดด
-		if Input.is_action_just_pressed("ui_accept"):
-			velocity.y = jump_velocity
-	# ==================================================
-	# ถ้าจบเกมแล้ว
-	# ==================================================
 
 	if is_dead:
-
 		velocity = Vector3.ZERO
-
 		return
 
-
-	# ==================================================
 	# GAME TIMER
-	# ==================================================
-
 	time_left -= delta
 
 	if time_left <= 0:
-
 		time_up()
-
 		return
 
 	update_timer_ui()
 
-
-	# ==================================================
-	# Hunger Timer
-	# ==================================================
-
+	# HUNGER TIMER
 	hunger_timer += delta
 
 	if hunger_timer >= hunger_interval:
@@ -625,17 +472,12 @@ func _physics_process(delta):
 		hunger_timer = 0.0
 
 		if hunger > 0:
-
 			hunger -= 1
 
 			if hunger_bar != null:
 				hunger_bar.value = hunger
 
-			print(
-				"Hunger ลดลงเหลือ: ",
-				hunger
-			)
-
+			print("Hunger ลดลงเหลือ: ", hunger)
 
 		if hunger <= 0:
 
@@ -647,11 +489,7 @@ func _physics_process(delta):
 			if health_bar != null:
 				health_bar.value = health
 
-			print(
-				"❤️ Health ลดลงเหลือ: ",
-				health
-			)
-
+			print("❤️ Health ลดลงเหลือ: ", health)
 
 		elif hunger > 70:
 
@@ -663,18 +501,12 @@ func _physics_process(delta):
 			if health_bar != null:
 				health_bar.value = health
 
-			print(
-				"💚 Health ฟื้นฟูเป็น: ",
-				health
-			)
+			print("💚 Health ฟื้นฟูเป็น: ", health)
 
-
-		# Health = 0 → Game Over
-
+		# HEALTH = 0
 		if health <= 0:
 
 			health = 0
-
 			is_dead = true
 
 			print("💀 GAME OVER")
@@ -686,23 +518,13 @@ func _physics_process(delta):
 				game_over_panel.visible = true
 
 			velocity = Vector3.ZERO
-
 			return
 
-
-	# ==================================================
-	# กด E กิน Food
-	# ==================================================
-
+	# EAT FOOD
 	if Input.is_action_just_pressed("eat_food"):
-
 		eat_food()
 
-
-	# ==================================================
-	# Movement
-	# ==================================================
-
+	# MOVEMENT INPUT
 	var input = Input.get_vector(
 		"move_left",
 		"move_right",
@@ -716,19 +538,10 @@ func _physics_process(delta):
 		-input.y
 	)
 
-
-	# ==================================================
-	# เดิน
-	# ==================================================
-
 	velocity.x = direction.x * speed
 	velocity.z = direction.z * speed
 
-
-	# ==================================================
-	# หมุนเฉพาะตัวละคร
-	# ==================================================
-
+	# ROTATE PLAYER MODEL ONLY
 	if direction.length() > 0.1:
 
 		var target_rotation = atan2(
@@ -742,27 +555,19 @@ func _physics_process(delta):
 			10.0 * delta
 		)
 
-
-	# ==================================================
-	# Gravity
-	# ==================================================
-
+	# GRAVITY & JUMP
 	if not is_on_floor():
-
 		velocity.y -= gravity * delta
 
+	elif Input.is_action_just_pressed("ui_accept"):
+		velocity.y = jump_velocity
+
 	else:
-
-		velocity.y = 0
-
+		velocity.y = 0.0
 
 	move_and_slide()
 
-
-	# ==================================================
-	# ตกจากแพ = ตาย
-	# ==================================================
-
+	# FALL OFF RAFT = GAME OVER
 	if global_position.y <= fall_death_height:
 
 		is_dead = true
@@ -779,24 +584,21 @@ func _physics_process(delta):
 
 		return
 
-
-	# ==================================================
-	# Animation
-	# ==================================================
-
+	# ANIMATION
 	if direction.length() > 0:
 
-		if animation_player.current_animation != "Walk":
-
-			animation_player.play("Walk")
+		if animation_player != null:
+			if animation_player.current_animation != "Walk":
+				animation_player.play("Walk")
 
 	else:
 
-		animation_player.stop()
+		if animation_player != null:
+			animation_player.stop()
 
 
 # ==================================================
-# โดนฉลามโจมตี
+# SHARK ATTACK
 # ==================================================
 
 func take_damage(amount: int):
@@ -812,10 +614,7 @@ func take_damage(amount: int):
 	if health_bar != null:
 		health_bar.value = health
 
-	print(
-		"🦈 โดนฉลามโจมตี! Health เหลือ = ",
-		health
-	)
+	print("🦈 โดนฉลามโจมตี! Health เหลือ = ", health)
 
 	if health <= 0:
 
@@ -839,7 +638,6 @@ func take_damage(amount: int):
 func restart_game():
 
 	print("🔄 Restart Game")
-
 	get_tree().reload_current_scene()
 
 
@@ -865,32 +663,36 @@ func _on_win_home_button_pressed() -> void:
 	get_tree().change_scene_to_file(
 		"res://scenes/main_menu.tscn"
 	)
-	
-func _process(delta: float) -> void:
-	if Input.is_key_pressed(KEY_E):
-		if eat_sound != null:
-			if not eat_sound.playing:
-				print("🔊 กด E สำเร็จ!")
-				eat_sound.play()
-				
+
+
+# ==================================================
+# SOUND FUNCTIONS
+# ==================================================
 
 func play_pickup_sound():
+
 	if pickup_sound != null:
 		pickup_sound.play()
 
 
-@onready var upgrade_sound: AudioStreamPlayer = $UpgradeSound
-
 func play_upgrade_sound():
+
 	if upgrade_sound != null:
 		upgrade_sound.play()
-		
-@onready var shark_attack_sound: AudioStreamPlayer = $SharkAttackSound
+
 
 func play_shark_attack_sound():
+
 	if shark_attack_sound != null:
 		shark_attack_sound.play()
 
 
+# ==================================================
+# NEXT LEVEL BUTTON
+# ==================================================
+
 func _on_next_level_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/level_2.tscn")
+
+	get_tree().change_scene_to_file(
+		"res://scenes/level_2.tscn"
+	)

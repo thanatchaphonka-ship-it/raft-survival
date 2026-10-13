@@ -403,7 +403,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
 swim_direction = -1.0
 min_attack_cooldown = 8.0
 max_attack_cooldown = 12.0
-damage = 10
+damage = 12
 
 [node name="OceanSound" type="AudioStreamPlayer" parent="." unique_id=355772419]
 stream = SubResource("AudioStreamMP3_yc10j")

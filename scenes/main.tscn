@@ -411,6 +411,7 @@ barrel_scene = ExtResource("13_a8y0u")
 
 [node name="Shark" parent="." unique_id=214004752 instance=ExtResource("14_jkv2x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.912907, 0, -0.56903696)
+damage = 20
 
 [node name="OceanSound" type="AudioStreamPlayer" parent="." unique_id=355772419]
 stream = SubResource("AudioStreamMP3_yc10j")
